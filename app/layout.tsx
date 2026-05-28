@@ -1,43 +1,31 @@
-import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 export const metadata = { title: 'hax429 mail' };
 
+const PRE_PAINT_CSS = `
+  html, body { margin: 0; padding: 0; background: #f6f7f9; color: #11161e;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif; }
+  @media (prefers-color-scheme: dark) {
+    html, body { background: #0e1116; color: #e6edf3; }
+  }
+  #app-root { min-height: 100vh; }
+`;
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body style={bodyStyle}>
-        <header style={headerStyle}>
-          <strong style={{ marginRight: 24 }}>hax429.me mail</strong>
-          <Link href="/inbox" style={navLink}>Inbox</Link>
-          <Link href="/sent" style={navLink}>Sent</Link>
-          <Link href="/compose" style={navLink}>Compose</Link>
-        </header>
-        <main style={{ padding: 24, maxWidth: 1000, margin: '0 auto' }}>{children}</main>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+          rel="stylesheet"
+        />
+        <style dangerouslySetInnerHTML={{ __html: PRE_PAINT_CSS }} />
+      </head>
+      <body>
+        <div id="app-root">{children}</div>
       </body>
     </html>
   );
 }
-
-const bodyStyle: React.CSSProperties = {
-  margin: 0,
-  fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
-  background: '#fafafa',
-  color: '#111',
-};
-
-const headerStyle: React.CSSProperties = {
-  borderBottom: '1px solid #e5e5e5',
-  padding: '12px 24px',
-  background: '#fff',
-  display: 'flex',
-  alignItems: 'center',
-  gap: 12,
-};
-
-const navLink: React.CSSProperties = {
-  color: '#0366d6',
-  textDecoration: 'none',
-  marginRight: 12,
-};
