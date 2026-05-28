@@ -1023,8 +1023,25 @@ function Reader({
       ? ((email as SentUI).to as string[])[0]
       : ((email as SentUI).to as string)
     : (email as ReceivedUI).to_addrs;
-  const html = isSent ? (email as SentUI).html : (email as ReceivedUI).html;
-  const text = isSent ? (email as SentUI).text : (email as ReceivedUI).text;
+  const baseHtml = isSent ? (email as SentUI).html : (email as ReceivedUI).html;
+  const baseText = isSent ? (email as SentUI).text : (email as ReceivedUI).text;
+  const [fetchedBody, setFetchedBody] = useState<{ html: string | null; text: string | null } | null>(null);
+  useEffect(() => {
+    setFetchedBody(null);
+    if (!isSent || !email?.id || baseHtml || baseText) return;
+    let cancelled = false;
+    fetch(`/api/emails/sent/${email.id}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((body) => {
+        if (!cancelled && body) setFetchedBody(body);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [email?.id, isSent, baseHtml, baseText]);
+  const html = baseHtml ?? fetchedBody?.html ?? null;
+  const text = baseText ?? fetchedBody?.text ?? null;
   const starred = !isSent && (email as ReceivedUI).starred;
 
   return (
