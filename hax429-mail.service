@@ -1,0 +1,29 @@
+# mail.hax429.me — Resend-backed mail UI (Next.js)
+#
+# Repo dir: /home/ubuntu/services/mail
+# Fronted by: /etc/nginx/sites-available/mail.hax429.me (proxy_pass localhost:3020)
+# Env file:  /home/ubuntu/services/mail/.env (RESEND_API_KEY, RESEND_WEBHOOK_SECRET)
+#
+# Rebuild after pulling new commits:
+#   cd /home/ubuntu/services/mail && npm install && npm run build
+#   sudo systemctl restart hax429-mail
+# Logs: sudo journalctl -u hax429-mail -f
+
+[Unit]
+Description=hax429.me Mail (Resend) Next.js Service
+After=network.target
+
+[Service]
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/services/mail
+Environment=NODE_ENV=production
+Environment=PORT=3020
+Environment=PATH=/home/ubuntu/.nvm/versions/node/v24.13.0/bin:/usr/bin:/bin
+EnvironmentFile=/home/ubuntu/services/mail/.env
+ExecStart=/home/ubuntu/.nvm/versions/node/v24.13.0/bin/node /home/ubuntu/services/mail/node_modules/.bin/next start -p 3020
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
