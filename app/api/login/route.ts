@@ -7,6 +7,7 @@ export async function POST(req: NextRequest) {
   const form = await req.formData();
   const password = String(form.get('password') ?? '');
   const next = String(form.get('next') ?? '/');
+  const remember = form.get('remember') === '1';
 
   const expected = process.env.AUTH_PASSWORD;
   if (!expected) {
@@ -30,7 +31,8 @@ export async function POST(req: NextRequest) {
     secure: proto === 'https',
     sameSite: 'lax',
     path: '/',
-    maxAge: 60 * 60 * 24 * 30, // 30 days
+    // Persistent (30d) when "remember me" is checked; session cookie otherwise
+    ...(remember ? { maxAge: 60 * 60 * 24 * 30 } : {}),
   });
   return res;
 }

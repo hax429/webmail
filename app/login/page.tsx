@@ -91,6 +91,44 @@ const PAGE_CSS = `
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--accent-soft);
   }
+  .login-remember {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 13.5px;
+    color: var(--text-secondary);
+  }
+  .login-remember input {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    background: var(--surface);
+    display: inline-grid;
+    place-content: center;
+    cursor: pointer;
+    transition: background 120ms, border-color 120ms;
+  }
+  .login-remember input:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .login-remember input:checked::after {
+    content: '';
+    width: 9px;
+    height: 5px;
+    border-left: 2px solid var(--accent-on);
+    border-bottom: 2px solid var(--accent-on);
+    transform: rotate(-45deg) translate(1px, -1px);
+  }
+  .login-remember input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
   .login-button {
     width: 100%;
     margin-top: 16px;
@@ -169,6 +207,11 @@ export default async function LoginPage({
           />
 
           {next ? <input type="hidden" name="next" value={next} /> : null}
+
+          <label className="login-remember">
+            <input type="checkbox" name="remember" value="1" defaultChecked />
+            <span>Remember me for 30 days</span>
+          </label>
 
           <button type="submit" className="login-button">
             Continue
